@@ -1,0 +1,115 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:todoapp/view/components/custom_text_form_field.dart';
+import 'package:todoapp/view/pages/home_page.dart';
+
+class WelcomePage extends StatefulWidget {
+  const WelcomePage({super.key});
+
+  @override
+  State<WelcomePage> createState() => _WelcomePageState();
+}
+
+class _WelcomePageState extends State<WelcomePage> {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  TextEditingController nameController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 6),
+              child: SvgPicture.asset("assets/icons/icon.svg"),
+            ),
+            Text("Tasky", style: Theme.of(context).textTheme.headlineLarge),
+          ],
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+          //crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 6),
+                  child: Text(
+                    "Welcom To Tasky",
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                ),
+                SvgPicture.asset("assets/icons/wave.svg"),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Text(
+                    "Your productivity journey starts here.",
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 24),
+                  child: SvgPicture.asset("assets/images/background.svg"),
+                ),
+              ],
+            ),
+            Form(
+              key: formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CustomTextFormField(
+                    controller: nameController,
+                    text: "Full Name",
+                    hintText: "e.g. Sarah Khalid",
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Please Enter your name";
+                      }
+                      else{
+                        return null;
+                      }
+                    },
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (formKey.currentState!.validate()) {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const HomePage(),
+                          ),
+                        );
+                      }
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Let's Get Started",
+                          style: Theme.of(context).textTheme.displayMedium,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
