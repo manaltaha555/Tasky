@@ -18,6 +18,7 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         centerTitle: true,
         title: Row(
@@ -57,6 +58,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   padding: const EdgeInsets.only(top: 8),
                   child: Text(
                     "Your productivity journey starts here.",
+                    textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),

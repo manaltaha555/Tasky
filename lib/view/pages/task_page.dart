@@ -16,7 +16,7 @@ class _TaskPageState extends State<TaskPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("New Task")),
+      appBar: AppBar(title: Text("New Task", style: TextStyle(fontFamily: "Poppins"),)),
       bottomNavigationBar:  Padding(
         padding: const EdgeInsets.symmetric(vertical: 20,horizontal: 16),
         child: ElevatedButton(
