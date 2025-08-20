@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:todoapp/view/components/custom_text_form_field.dart';
-import 'package:todoapp/view/pages/home_page.dart';
+import 'package:todoapp/view/pages/root_page.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -17,6 +17,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context).textTheme;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -28,7 +29,7 @@ class _WelcomePageState extends State<WelcomePage> {
               padding: const EdgeInsets.only(right: 6),
               child: SvgPicture.asset("assets/icons/icon.svg"),
             ),
-            Text("Tasky", style: Theme.of(context).textTheme.headlineLarge),
+            Text("Tasky", style: theme.headlineMedium),
           ],
         ),
       ),
@@ -45,7 +46,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   padding: const EdgeInsets.only(right: 6),
                   child: Text(
                     "Welcom To Tasky",
-                    style: Theme.of(context).textTheme.headlineMedium,
+                    style: theme.headlineSmall,
                   ),
                 ),
                 SvgPicture.asset("assets/icons/wave.svg"),
@@ -59,7 +60,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   child: Text(
                     "Your productivity journey starts here.",
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: theme.bodyMedium,
                   ),
                 ),
                 Padding(
@@ -91,7 +92,7 @@ class _WelcomePageState extends State<WelcomePage> {
                       if (formKey.currentState!.validate()) {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => const HomePage(),
+                            builder: (context) =>  RootPage(userName: nameController.text),
                           ),
                         );
                       }
@@ -101,7 +102,7 @@ class _WelcomePageState extends State<WelcomePage> {
                       children: [
                         Text(
                           "Let's Get Started",
-                          style: Theme.of(context).textTheme.displayMedium,
+                          style: theme.displayMedium,
                         ),
                       ],
                     ),

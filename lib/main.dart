@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todoapp/controller/task_controller.dart';
 import 'package:todoapp/themes/button_theme.dart';
 import 'package:todoapp/themes/text_theme.dart';
 import 'package:todoapp/view/pages/welcome_page.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => TaskController(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -20,14 +27,14 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Color(0XFF181818),
         appBarTheme: AppBarTheme(
           backgroundColor: Colors.transparent,
-          foregroundColor: Colors.white
+          foregroundColor: Colors.white,
+          titleTextStyle: TextStyle(fontFamily: "Poppins"),
         ),
         textTheme: MyTextTheme.myTextTheme,
-        elevatedButtonTheme: MyButtonTheme.myElevatedButtonTheme
-       // textThmeme: MyTextTheme.
+        elevatedButtonTheme: MyButtonTheme.myElevatedButtonTheme,
+        // textThmeme: MyTextTheme.
       ),
       home: WelcomePage(),
     );
   }
 }
-
