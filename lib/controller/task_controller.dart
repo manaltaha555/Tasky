@@ -7,13 +7,13 @@ class TaskController with ChangeNotifier {
 
   List<TaskModel> get getTasks => _tasks;
 
-  void addTask(String taskName, String taskDescription){
+  void addTask(String taskName, String taskDescription,){
     _tasks.add(TaskModel(taskName: taskName, taskDescription: taskDescription, isFinished: false));
     notifyListeners();
   }
   
-  void changeTask(TaskModel task){
-    task.isFinished = !task.isFinished;
+  void changeTask(TaskModel task, bool? value){
+    task.isFinished = value!;
     notifyListeners();
   }
 
