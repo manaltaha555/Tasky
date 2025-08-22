@@ -105,6 +105,3 @@ class _RootPageState extends State<RootPage> {
     );
   }
 }
-// Navigator.of(
-      //   context,
-      // ).push(MaterialPageRoute(builder: (context) => TaskPage()));    );

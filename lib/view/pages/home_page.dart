@@ -125,7 +125,7 @@ class HomePage extends StatelessWidget {
                           padding: const EdgeInsets.only(right: 8),
                           child: Icon(Icons.add),
                         ),
-                        Text("Add new task"),
+                        Text("Add new task", style: theme.displayMedium,),
                       ],
                     ),
                   ),

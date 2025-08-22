@@ -19,6 +19,7 @@ class _TaskPageState extends State<TaskPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(title: Text("New Task")),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
