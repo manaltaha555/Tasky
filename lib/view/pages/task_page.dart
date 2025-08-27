@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:todoapp/controller/task_controller.dart';
+import 'package:todoapp/bloc/task_controller.dart';
+import 'package:todoapp/bloc/task_event.dart';
 import 'package:todoapp/view/components/custom_text_form_field.dart';
 
 class TaskPage extends StatefulWidget {
@@ -90,10 +91,12 @@ class _TaskPageState extends State<TaskPage> {
                 child: ElevatedButton(
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
-                      Provider.of<TaskController>(
-                        context,
-                        listen: false,
-                      ).addTask(taskName.text, taskDescription.text);
+                      context.read<TaskController>().add(
+                        AddTask(
+                          taskName: taskName.text,
+                          taskDescription: taskDescription.text,
+                        ),
+                      );
                       Navigator.of(context).pop();
                     }
                   },

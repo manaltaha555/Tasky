@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
-import 'package:todoapp/controller/task_controller.dart';
+import 'package:todoapp/bloc/task_controller.dart';
 import 'package:todoapp/themes/button_theme.dart';
 import 'package:todoapp/themes/text_theme.dart';
 import 'package:todoapp/view/pages/welcome_page.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
+    BlocProvider(
       create: (_) => TaskController(),
       child: const MyApp(),
     ),

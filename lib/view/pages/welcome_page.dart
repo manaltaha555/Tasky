@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:todoapp/bloc/task_controller.dart';
+import 'package:todoapp/bloc/task_event.dart';
 import 'package:todoapp/view/components/custom_text_form_field.dart';
 import 'package:todoapp/view/pages/root_page.dart';
 
@@ -90,6 +93,8 @@ class _WelcomePageState extends State<WelcomePage> {
                   ElevatedButton(
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
+                        context.read<TaskController>().add(
+                        LoadTasks(tasks: []));
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) =>  RootPage(userName: nameController.text),

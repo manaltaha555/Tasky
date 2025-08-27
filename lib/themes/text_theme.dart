@@ -9,7 +9,5 @@ class MyTextTheme{
     bodyLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Color(0XFF9E9E9E), fontFamily: "Poppins"),
     displayMedium: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(0XFFFFFCFC), fontFamily: "Poppins"),
     labelMedium: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0XFFC6C6C6), fontFamily: "Poppins"),    
-
-
   );
 }
