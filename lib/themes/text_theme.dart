@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class MyTextTheme{
   static final myTextTheme = TextTheme(
-    headlineLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.w400, color: Color(0XFFFFFCFC), fontFamily: "Poppins"),
+    headlineLarge: TextStyle(fontSize: 30, fontWeight: FontWeight.w400, color: Color(0XFFFFFCFC), fontFamily: "Poppins"),
     headlineMedium: TextStyle(fontSize: 28, fontWeight: FontWeight.w400, color: Color(0XFFFFFCFC), fontFamily: "Poppins"),
     headlineSmall: TextStyle(fontSize: 24, fontWeight: FontWeight.w400, color: Color(0XFFFFFCFC), fontFamily: "Poppins"),
     bodyMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.white, fontFamily: "Poppins"),

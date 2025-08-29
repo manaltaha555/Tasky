@@ -17,6 +17,7 @@ class TaskController extends Bloc<TaskEvent, TaskState> {
         //read the tasks from the file
         final dir = await getApplicationDocumentsDirectory();
         File file = File("${dir.path}/tasks.json");
+
         if (!(await file.exists())) {
           emit(IsLoadedState([])); //empty list there is no data
         } else {
@@ -32,6 +33,7 @@ class TaskController extends Bloc<TaskEvent, TaskState> {
 
     on<AddTask>((event, emit) async {
       emit(IsLoadingState());
+      Future.delayed(Duration(milliseconds: 500));
       try {
         //create task
         final task = TaskModel(
@@ -53,12 +55,15 @@ class TaskController extends Bloc<TaskEvent, TaskState> {
 
     on<ToggleTask>((event, emit) async {
       emit(IsLoadingState());
+      Future.delayed(Duration(milliseconds: 500));
       try {
         event.task.isFinished = event.isFinished;
+
         final dir = await getApplicationDocumentsDirectory();
         File file = File("${dir.path}/tasks.json");
-        final jsonString = jsonEncode(event.task.toJson());
+        final jsonString = jsonEncode(_tasks.map((e) => e.toJson()).toList());
         await file.writeAsString(jsonString);
+        
         emit(IsLoadedState(List.from(_tasks)));
       } catch (e) {
         emit(ErrorState("$e"));
@@ -70,10 +75,13 @@ class TaskController extends Bloc<TaskEvent, TaskState> {
       try {
         event.task.taskName = event.taskName;
         event.task.taskDescription = event.taskDescription;
+
         final dir = await getApplicationDocumentsDirectory();
         File file = File("${dir.path}/tasks.json");
-        final jsonString = jsonEncode(event.task.toJson());
+        final jsonString = jsonEncode(_tasks.map((e) => e.toJson()).toList());
         await file.writeAsString(jsonString);
+
+        emit(IsLoadedState(List.from(_tasks)));
       } catch (e) {
         emit(ErrorState("$e"));
       }
