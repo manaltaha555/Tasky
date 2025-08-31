@@ -4,15 +4,16 @@ import 'package:flutter_svg/svg.dart';
 import 'package:todoapp/bloc/task_controller.dart';
 import 'package:todoapp/bloc/task_event.dart';
 import 'package:todoapp/bloc/task_state.dart';
+import 'package:todoapp/services/preferneces.dart';
 import 'package:todoapp/view/pages/task_page.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key, required this.userName});
+  HomePage({super.key});
 
-  final String userName;
-
+  final String? username = Preferneces().getString("userName") ?? "username";
   @override
   Widget build(BuildContext context) {
+    print("username: $username");
     final theme = Theme.of(context).textTheme;
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -32,7 +33,7 @@ class HomePage extends StatelessWidget {
                     radius: 42,
                   ),
                   title: Text(
-                    "Good Evening $userName",
+                    "Good Evening $username",
                     style: theme.displayMedium,
                   ),
                   subtitle: Text(

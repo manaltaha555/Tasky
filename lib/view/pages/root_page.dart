@@ -6,8 +6,7 @@ import 'package:todoapp/view/pages/profile_page.dart';
 import 'package:todoapp/view/pages/to_do_page.dart';
 
 class RootPage extends StatefulWidget {
-  const RootPage({super.key, required this.userName});
-  final String userName;
+  const RootPage({super.key});
 
   @override
   State<RootPage> createState() => _RootPageState();
@@ -21,7 +20,7 @@ class _RootPageState extends State<RootPage> {
   void initState() {
     super.initState();
     pages = [
-      HomePage(userName: widget.userName),
+      HomePage(),
       ToDoPage(),
       CompletedPage(),
       ProfilePage(),
