@@ -1,9 +1,9 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Preferneces {
-  static Preferneces _instance = Preferneces._init();
+  static final Preferneces _instance = Preferneces._internal();
 
-  Preferneces._init();
+  Preferneces._internal();
 
   factory Preferneces() => _instance;
 
@@ -19,5 +19,9 @@ class Preferneces {
 
   String? getString(String key) {
     return _prefs.getString(key);
+  }
+
+  void clear() async {
+    await _prefs.clear();
   }
 }
