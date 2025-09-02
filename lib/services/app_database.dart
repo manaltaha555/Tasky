@@ -19,17 +19,13 @@ class AppDatabase {
       return _database!;
     } else {
       _database = await openDb();
-      print("db created");
       return _database!;
     }
   }
 
   Future<Database> openDb() async {
-    print("Getting DB path...");
     var dbPath = await getDatabasesPath();
-    print("DB path: $dbPath");
     String path = join(dbPath, dbPathName);
-    print("Full path: $path");
 
     return await openDatabase(
       path,
@@ -44,19 +40,16 @@ class AppDatabase {
             isPriority INTEGER NOT NULL
             );
 ''');
-        print("table $tableName created!");
       },
     );
   }
 
   Future<List<TaskModel>> getTodos() async {
-    print("Fetching todos...");
     final Database database = await db;
     final rows = await database.query(tableName);
-    print("Rows fetched: $rows");
     return rows.map((e) => TaskModel.fromJson(e)).toList();
   }
-
+  
   Future<int> insertTodo(TaskModel task) async {
     final Database database = await db;
     return await database.insert(
@@ -74,6 +67,5 @@ class AppDatabase {
       where: "id = ?",
       whereArgs: [task.id],
     );
-
   }
 }

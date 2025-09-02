@@ -8,6 +8,7 @@ class TaskController extends Bloc<TaskEvent, TaskState> {
   List<TaskModel> _tasks = [];
 
   TaskController() : super(IsLoadingState()) {
+
     on<LoadTasks>((event, emit) async {
       emit(IsLoadingState());
       await Future.delayed(Duration(milliseconds: 500));
@@ -33,20 +34,10 @@ class TaskController extends Bloc<TaskEvent, TaskState> {
     });
 
     on<ToggleTask>((event, emit) async {
-      emit(IsLoadingState());
-      Future.delayed(Duration(milliseconds: 500));
-      try {
         await AppDatabase().updateTodp(event.task);
         final index = _tasks.indexWhere((t) => t.id == event.task.id);
-        print("index of task is $index");
-        print("task id is ${event.task.id}");
-        print("isFinishe in toggle is ${event.task.isFinished}");
         _tasks[index] = _tasks[index].copyWith(isFinished: event.task.isFinished);
-        print(_tasks.toString());
         emit(IsLoadedState(List.from(_tasks)));
-      } catch (e) {
-        emit(ErrorState("$e"));
-      }
     });
     
     on<EditTask>((event, emit) async {
