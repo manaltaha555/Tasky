@@ -1,28 +1,27 @@
-
 import 'package:todoapp/models/task_model.dart';
 
 sealed class TaskEvent {}
-class LoadTasks extends TaskEvent{
-  List <TaskModel> tasks;
+
+class LoadTasks extends TaskEvent {
+  List<TaskModel> tasks;
   LoadTasks({required this.tasks});
 }
-class AddTask extends TaskEvent{
-  final String taskName;
-  final String taskDescription;
 
-  AddTask({required this.taskName, required this.taskDescription});
+class AddTask extends TaskEvent {
+  TaskModel task;
+
+  AddTask({required this.task});
 }
+
 class ToggleTask extends TaskEvent {
-  final TaskModel task;
-  final bool isFinished;
+    TaskModel task;
 
-  ToggleTask({required this.task, required this.isFinished});
+  ToggleTask({required this.task});
 }
 
-class EditTask extends TaskEvent{
-    final TaskModel task;
-    final String taskName;
-    final String taskDescription;
-    EditTask({required this.task, required this.taskName, required this.taskDescription});
-
-} 
+class EditTask extends TaskEvent {
+  TaskModel task;
+  EditTask({
+    required this.task
+  });
+}

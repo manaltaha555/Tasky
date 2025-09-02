@@ -7,13 +7,24 @@ import 'package:todoapp/bloc/task_state.dart';
 import 'package:todoapp/services/preferneces.dart';
 import 'package:todoapp/view/pages/task_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   HomePage({super.key});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final String? username = Preferneces().getString("userName") ?? "username";
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<TaskController>().add(LoadTasks(tasks: []));
+  }
+
   @override
   Widget build(BuildContext context) {
-    print("username: $username");
     final theme = Theme.of(context).textTheme;
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -21,7 +32,6 @@ class HomePage extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
-            //mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
@@ -96,10 +106,13 @@ class HomePage extends StatelessWidget {
                                     value: state.tasks[index].isFinished,
                                     activeColor: Color(0XFF15B86C),
                                     onChanged: (value) {
+                                      print("isFinished is: $value");
+                                      print("index $index");
                                       context.read<TaskController>().add(
                                         ToggleTask(
-                                          task: state.tasks[index],
-                                          isFinished: value ?? false,
+                                          task: state.tasks[index].copyWith(
+                                            isFinished: value ?? false,
+                                          ),
                                         ),
                                       );
                                     },

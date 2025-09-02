@@ -9,11 +9,11 @@ class Preferneces {
 
   late final SharedPreferences _prefs;
 
-  void init() async {
+  Future<void> init() async {
     _prefs = await SharedPreferences.getInstance();
   }
 
-  void saveString(String key, String value) async {
+  Future<void> saveString(String key, String value) async {
     await _prefs.setString(key, value);
   }
 
@@ -21,7 +21,7 @@ class Preferneces {
     return _prefs.getString(key);
   }
 
-  void clear() async {
+  Future<void> clear() async {
     await _prefs.clear();
   }
 }

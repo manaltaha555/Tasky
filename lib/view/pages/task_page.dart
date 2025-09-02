@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:todoapp/bloc/task_controller.dart';
 import 'package:todoapp/bloc/task_event.dart';
+import 'package:todoapp/models/task_model.dart';
 import 'package:todoapp/view/components/custom_text_form_field.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TaskPage extends StatefulWidget {
   const TaskPage({super.key});
@@ -93,8 +94,11 @@ class _TaskPageState extends State<TaskPage> {
                     if (formKey.currentState!.validate()) {
                       context.read<TaskController>().add(
                         AddTask(
-                          taskName: taskName.text,
-                          taskDescription: taskDescription.text,
+                          task: TaskModel(
+                            taskName: taskName.text,
+                            taskDescription: taskDescription.text,
+                            isPriority: isActive,
+                          ),
                         ),
                       );
                       Navigator.of(context).pop();

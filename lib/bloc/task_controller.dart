@@ -1,9 +1,8 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todoapp/bloc/task_event.dart';
 import 'package:todoapp/bloc/task_state.dart';
 import 'package:todoapp/models/task_model.dart';
+import 'package:todoapp/services/app_database.dart';
 
 class TaskController extends Bloc<TaskEvent, TaskState> {
   List<TaskModel> _tasks = [];
@@ -11,20 +10,11 @@ class TaskController extends Bloc<TaskEvent, TaskState> {
   TaskController() : super(IsLoadingState()) {
     on<LoadTasks>((event, emit) async {
       emit(IsLoadingState());
-      Future.delayed(Duration(milliseconds: 500));
+      await Future.delayed(Duration(milliseconds: 500));
       try {
-        //read the tasks from the file
-        // final dir = await getApplicationDocumentsDirectory();
-        // File file = File("${dir.path}/tasks.json");
-
-        // if (!(await file.exists())) {
-        //   emit(IsLoadedState([])); //empty list there is no data
-        // } else {
-        //   final jsonString = await file.readAsString();
-        //   final data = jsonDecode(jsonString) as List;
-        //   _tasks = data.map((e) => TaskModel.fromJson(e)).toList();
-        //   emit(IsLoadedState(_tasks));
-        // }
+        //get the data from db
+        _tasks = await AppDatabase().getTodos();
+        emit(IsLoadedState(List.from(_tasks)));
       } catch (e) {
         emit(ErrorState("$e"));
       }
@@ -34,19 +24,9 @@ class TaskController extends Bloc<TaskEvent, TaskState> {
       emit(IsLoadingState());
       Future.delayed(Duration(milliseconds: 500));
       try {
-        // //create task
-        // final task = TaskModel(
-        //   taskName: event.taskName,
-        //   taskDescription: event.taskDescription,
-        // );
-        // //add task to the list
-        // _tasks.add(task);
-        // //add task to the file
-        // final dir = await getApplicationDocumentsDirectory();
-        // File file = File("${dir.path}/tasks.json");
-        // final jsonString = jsonEncode(_tasks.map((e) => e.toJson()).toList());
-        // await file.writeAsString(jsonString);
-        // emit(IsLoadedState(List.from(_tasks)));
+        final id = await AppDatabase().insertTodo(event.task);
+        _tasks.add(event.task.copyWith(id: id));
+        emit(IsLoadedState(List.from(_tasks)));
       } catch (e) {
         emit(ErrorState("$e"));
       }
@@ -56,48 +36,35 @@ class TaskController extends Bloc<TaskEvent, TaskState> {
       emit(IsLoadingState());
       Future.delayed(Duration(milliseconds: 500));
       try {
-        // event.task.isFinished = event.isFinished;
-
-        // final dir = await getApplicationDocumentsDirectory();
-        // File file = File("${dir.path}/tasks.json");
-        // final jsonString = jsonEncode(_tasks.map((e) => e.toJson()).toList());
-        // await file.writeAsString(jsonString);
-        
-        // emit(IsLoadedState(List.from(_tasks)));
+        await AppDatabase().updateTodp(event.task);
+        final index = _tasks.indexWhere((t) => t.id == event.task.id);
+        print("index of task is $index");
+        print("task id is ${event.task.id}");
+        print("isFinishe in toggle is ${event.task.isFinished}");
+        _tasks[index] = _tasks[index].copyWith(isFinished: event.task.isFinished);
+        print(_tasks.toString());
+        emit(IsLoadedState(List.from(_tasks)));
       } catch (e) {
         emit(ErrorState("$e"));
       }
     });
-
+    
     on<EditTask>((event, emit) async {
       emit(IsLoadingState());
+      Future.delayed(Duration(milliseconds: 500));
       try {
-        // event.task.taskName = event.taskName;
-        // event.task.taskDescription = event.taskDescription;
-
-        // final dir = await getApplicationDocumentsDirectory();
-        // File file = File("${dir.path}/tasks.json");
-        // final jsonString = jsonEncode(_tasks.map((e) => e.toJson()).toList());
-        // await file.writeAsString(jsonString);
-
-        // emit(IsLoadedState(List.from(_tasks)));
+        await AppDatabase().updateTodp(event.task);
+        final index = _tasks.indexWhere((t) => t.id == event.task.id);
+        _tasks[index].copyWith(
+          taskName: event.task.taskName,
+          taskDescription: event.task.taskDescription,
+          isPriority: event.task.isPriority,
+        );
+        emit(IsLoadedState(List.from(_tasks)));
       } catch (e) {
         emit(ErrorState("$e"));
       }
       //edit task
     });
   }
-
-  // void addTask(String taskName, String taskDescription,){
-  //   _tasks.add(TaskModel(taskName: taskName, taskDescription: taskDescription, isFinished: false));
-  // }
-
-  // void changeTask(TaskModel task, bool? value){
-  //   task.isFinished = value!;
-  // }
-
-  // void editTask(TaskModel task, String taskName, String taskDescription){
-  //   task.taskName = taskName;
-  //   task.taskDescription = taskDescription;
-  // }
 }

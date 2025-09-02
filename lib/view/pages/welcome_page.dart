@@ -48,10 +48,7 @@ class _WelcomePageState extends State<WelcomePage> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(right: 6),
-                  child: Text(
-                    "Welcom To Tasky",
-                    style: theme.headlineSmall,
-                  ),
+                  child: Text("Welcom To Tasky", style: theme.headlineSmall),
                 ),
                 SvgPicture.asset("assets/icons/wave.svg"),
               ],
@@ -85,33 +82,28 @@ class _WelcomePageState extends State<WelcomePage> {
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "Please Enter your name";
-                      }
-                      else{
+                      } else {
                         return null;
                       }
                     },
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      if (formKey.currentState!.validate()){
-                       // Preferneces().init();
-                        Preferneces().saveString("userName", nameController.text);
-                        context.read<TaskController>().add(
-                        LoadTasks(tasks: []));
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) =>  RootPage(),
-                          ),
+                      if (formKey.currentState!.validate()) {
+                        Preferneces().saveString(
+                          "userName",
+                          nameController.text,
+                        );
+                        Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(builder: (context) => RootPage()),
+                          (Route<dynamic> route) => false,
                         );
                       }
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          "Let's Get Started",
-                          style: theme.displayMedium,
-                        ),
+                        Text("Let's Get Started", style: theme.displayMedium),
                       ],
                     ),
                   ),
