@@ -106,102 +106,104 @@ class _HomePageState extends State<HomePage> {
                             ),
                           );
                         } else {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Card(
-                                margin: EdgeInsets.symmetric(vertical: 8),
-                                color: Color(0XFF2A2A2A),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadiusGeometry.circular(
-                                    20,
+                          return SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Card(
+                                  margin: EdgeInsets.symmetric(vertical: 8),
+                                  color: Color(0XFF2A2A2A),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadiusGeometry.circular(
+                                      20,
+                                    ),
                                   ),
-                                ),
-                                child: ListTile(
-                                  title: Text(
-                                    "Achieved Tasks",
-                                    style: theme.bodyMedium,
-                                  ),
-                                  subtitle: Text(
-                                    "$finishedTasks of $allTasks",
-                                    style: theme.labelMedium,
-                                  ),
-                                  trailing: CircularPercentIndicator(
-                                    radius: 27,
-                                    lineWidth: 5.0,
-                                    percent: precentage / 100,
-                                    center: Text(
-                                      "${precentage.floor()} %",
+                                  child: ListTile(
+                                    title: Text(
+                                      "Achieved Tasks",
                                       style: theme.bodyMedium,
                                     ),
-                                    progressColor: Color(0XFF15B86C),
-                                    backgroundColor: Color(0XFF9E9E9E),
+                                    subtitle: Text(
+                                      "$finishedTasks of $allTasks",
+                                      style: theme.labelMedium,
+                                    ),
+                                    trailing: CircularPercentIndicator(
+                                      radius: 27,
+                                      lineWidth: 5.0,
+                                      percent: precentage / 100,
+                                      center: Text(
+                                        "${precentage.floor()} %",
+                                        style: theme.bodyMedium,
+                                      ),
+                                      progressColor: Color(0XFF15B86C),
+                                      backgroundColor: Color(0XFF9E9E9E),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Card(
-                                margin: EdgeInsets.symmetric(vertical: 8),
-                                color: Color(0XFF2A2A2A),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadiusGeometry.circular(
-                                    20,
+                                Card(
+                                  margin: EdgeInsets.symmetric(vertical: 8),
+                                  color: Color(0XFF2A2A2A),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadiusGeometry.circular(
+                                      20,
+                                    ),
                                   ),
-                                ),
-                                child:Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(left: 16, top: 16, bottom: 8 ),
-                                        child: Text(
-                                          "High priority tasks",
-                                          style: theme.bodyMedium!.copyWith(
-                                            color: Color(0XFF15B86C),
+                                  child:Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(left: 16, top: 16, bottom: 8 ),
+                                          child: Text(
+                                            "High priority tasks",
+                                            style: theme.bodyMedium!.copyWith(
+                                              color: Color(0XFF15B86C),
+                                            ),
                                           ),
                                         ),
+                                        ListView.builder(
+                                          shrinkWrap: true,
+                                          itemCount: highPriority.length,
+                                          itemBuilder: (context, index) {
+                                            return TaskCard(
+                                              task: highPriority[index],
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                if (normalTasks.isNotEmpty)
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 16,
+                                    ),
+                                    child: Text(
+                                      "My Tasks",
+                                      style: theme.headlineSmall?.copyWith(
+                                        fontSize: 20,
                                       ),
-                                      ListView.builder(
-                                        shrinkWrap: true,
-                                        itemCount: highPriority.length,
-                                        itemBuilder: (context, index) {
-                                          return TaskCard(
-                                            task: highPriority[index],
-                                          );
-                                        },
+                                    ),
+                                  ),
+                                ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: normalTasks.length,
+                                  itemBuilder: (context, index) {
+                                    return Card(
+                                      margin: EdgeInsets.symmetric(vertical: 8),
+                                      color: Color(0XFF2A2A2A),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadiusGeometry.circular(20),
                                       ),
-                                    ],
-                                  ),
+                                      child: TaskCard(
+                                        task: normalTasks[index],
+                                      ),
+                                    );
+                                  },
                                 ),
-                              if (normalTasks.isNotEmpty)
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 16,
-                                  ),
-                                  child: Text(
-                                    "My Tasks",
-                                    style: theme.headlineSmall?.copyWith(
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                ),
-                              ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: normalTasks.length,
-                                itemBuilder: (context, index) {
-                                  return Card(
-                                    margin: EdgeInsets.symmetric(vertical: 8),
-                                    color: Color(0XFF2A2A2A),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadiusGeometry.circular(20),
-                                    ),
-                                    child: TaskCard(
-                                      task: normalTasks[index],
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
+                              ],
+                            ),
                           );
                         }
                       case ErrorState():
