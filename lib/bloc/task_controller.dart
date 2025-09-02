@@ -13,7 +13,6 @@ class TaskController extends Bloc<TaskEvent, TaskState> {
       emit(IsLoadingState());
       await Future.delayed(Duration(milliseconds: 500));
       try {
-        //get the data from db
         _tasks = await AppDatabase().getTodos();
         emit(IsLoadedState(List.from(_tasks)));
       } catch (e) {
@@ -55,7 +54,6 @@ class TaskController extends Bloc<TaskEvent, TaskState> {
       } catch (e) {
         emit(ErrorState("$e"));
       }
-      //edit task
     });
   }
 }

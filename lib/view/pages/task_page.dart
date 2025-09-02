@@ -6,7 +6,8 @@ import 'package:todoapp/view/components/custom_text_form_field.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TaskPage extends StatefulWidget {
-  const TaskPage({super.key});
+  final TaskModel? task;
+  const TaskPage({super.key, this.task});
 
   @override
   State<TaskPage> createState() => _TaskPageState();
@@ -15,8 +16,20 @@ class TaskPage extends StatefulWidget {
 class _TaskPageState extends State<TaskPage> {
   final TextEditingController taskName = TextEditingController();
   final TextEditingController taskDescription = TextEditingController();
+
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool isActive = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.task != null) {
+      taskName.text = widget.task!.taskName;
+      taskDescription.text = widget.task!.taskDescription;
+      isActive = widget.task!.isPriority;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,15 +105,25 @@ class _TaskPageState extends State<TaskPage> {
                 child: ElevatedButton(
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
-                      context.read<TaskController>().add(
-                        AddTask(
-                          task: TaskModel(
+                      if (widget.task != null) {
+                        context.read<TaskController>().add(
+                          EditTask(task: widget.task!.copyWith(
                             taskName: taskName.text,
                             taskDescription: taskDescription.text,
-                            isPriority: isActive,
+                            isPriority: isActive
+                          )),
+                        );
+                      } else {
+                        context.read<TaskController>().add(
+                          AddTask(
+                            task: TaskModel(
+                              taskName: taskName.text,
+                              taskDescription: taskDescription.text,
+                              isPriority: isActive,
+                            ),
                           ),
-                        ),
-                      );
+                        );
+                      }
                       Navigator.of(context).pop();
                     }
                   },

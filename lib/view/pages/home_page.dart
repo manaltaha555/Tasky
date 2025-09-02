@@ -5,6 +5,7 @@ import 'package:todoapp/bloc/task_controller.dart';
 import 'package:todoapp/bloc/task_event.dart';
 import 'package:todoapp/bloc/task_state.dart';
 import 'package:todoapp/services/preferneces.dart';
+import 'package:todoapp/view/components/task_card.dart';
 import 'package:todoapp/view/pages/task_page.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
@@ -126,9 +127,13 @@ class _HomePageState extends State<HomePage> {
                                     style: theme.labelMedium,
                                   ),
                                   trailing: CircularPercentIndicator(
-                                    radius: 30,
+                                    radius: 27,
                                     lineWidth: 5.0,
-                                    center: Text("${precentage.floor()} %"),
+                                    percent: precentage / 100,
+                                    center: Text(
+                                      "${precentage.floor()} %",
+                                      style: theme.bodyMedium,
+                                    ),
                                     progressColor: Color(0XFF15B86C),
                                     backgroundColor: Color(0XFF9E9E9E),
                                   ),
@@ -142,66 +147,31 @@ class _HomePageState extends State<HomePage> {
                                     20,
                                   ),
                                 ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16),
-                                  child: Column(
+                                child:Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        "High priority tasks",
-                                        style: theme.bodyMedium!.copyWith(
-                                          color: Color(0XFF15B86C),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 16, top: 16, bottom: 8 ),
+                                        child: Text(
+                                          "High priority tasks",
+                                          style: theme.bodyMedium!.copyWith(
+                                            color: Color(0XFF15B86C),
+                                          ),
                                         ),
                                       ),
                                       ListView.builder(
                                         shrinkWrap: true,
                                         itemCount: highPriority.length,
                                         itemBuilder: (context, index) {
-                                          return ListTile(
-                                            contentPadding: EdgeInsets.zero,
-                                            leading: Checkbox(
-                                              value: highPriority[index]
-                                                  .isFinished,
-                                              activeColor: Color(0XFF15B86C),
-                                              onChanged: (value) {
-                                                context
-                                                    .read<TaskController>()
-                                                    .add(
-                                                      ToggleTask(
-                                                        task:
-                                                            highPriority[index]
-                                                                .copyWith(
-                                                                  isFinished:
-                                                                      value ??
-                                                                      false,
-                                                                ),
-                                                      ),
-                                                    );
-                                              },
-                                            ),
-                                            title: Text(
-                                              highPriority[index].taskName,
-                                              style:
-                                                  highPriority[index].isFinished
-                                                  ? theme.bodyMedium!.copyWith(
-                                                      decoration: TextDecoration
-                                                          .lineThrough,
-                                                      decorationColor: Color(
-                                                        0XFFA0A0A0,
-                                                      ),
-                                                      decorationThickness: 2,
-                                                      color: Color(0XFFA0A0A0),
-                                                    )
-                                                  : theme.bodyMedium,
-                                            ),
+                                          return TaskCard(
+                                            task: highPriority[index],
                                           );
                                         },
                                       ),
                                     ],
                                   ),
                                 ),
-                              ),
                               if (normalTasks.isNotEmpty)
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -225,45 +195,8 @@ class _HomePageState extends State<HomePage> {
                                       borderRadius:
                                           BorderRadiusGeometry.circular(20),
                                     ),
-                                    child: ListTile(
-                                      leading: Checkbox(
-                                        value: normalTasks[index].isFinished,
-                                        activeColor: Color(0XFF15B86C),
-                                        onChanged: (value) {
-                                          context.read<TaskController>().add(
-                                            ToggleTask(
-                                              task: normalTasks[index].copyWith(
-                                                isFinished: value ?? false,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                      title: Text(
-                                        normalTasks[index].taskName,
-                                        style: normalTasks[index].isFinished
-                                            ? theme.bodyMedium!.copyWith(
-                                                decoration:
-                                                    TextDecoration.lineThrough,
-                                                decorationColor: Color(
-                                                  0XFFA0A0A0,
-                                                ),
-                                                decorationThickness: 2,
-                                                color: Color(0XFFA0A0A0),
-                                              )
-                                            : theme.bodyMedium,
-                                      ),
-                                      subtitle: normalTasks[index].isFinished
-                                          ? null
-                                          : Text(
-                                              normalTasks[index]
-                                                  .taskDescription,
-                                              style: theme.labelMedium,
-                                            ),
-                                      trailing: Icon(
-                                        Icons.more_vert_rounded,
-                                        color: Color(0XFFC6C6C6),
-                                      ),
+                                    child: TaskCard(
+                                      task: normalTasks[index],
                                     ),
                                   );
                                 },
