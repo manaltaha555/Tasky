@@ -5,10 +5,12 @@ import 'package:todoapp/bloc/task_controller.dart';
 import 'package:todoapp/bloc/task_event.dart';
 import 'package:todoapp/bloc/task_state.dart';
 import 'package:todoapp/services/preferneces.dart';
+import 'package:todoapp/view/components/task_card.dart';
 import 'package:todoapp/view/pages/task_page.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({super.key});
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -32,48 +34,50 @@ class _HomePageState extends State<HomePage> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                child: ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  leading: CircleAvatar(
-                    backgroundImage: AssetImage("assets/images/manal.jpg"),
-                    radius: 42,
-                  ),
-                  title: Text(
-                    "Good Evening $username",
-                    style: theme.displayMedium,
-                  ),
-                  subtitle: Text(
-                    "One task at a time.One step closer.",
-                    style: theme.labelMedium,
-                  ),
-                  trailing: GestureDetector(
-                    onTap: () {},
-                    child: CircleAvatar(
-                      backgroundColor: Color(0XFF2A2A2A),
-                      child: SvgPicture.asset("assets/icons/sun.svg"),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      child: ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: CircleAvatar(
+                          backgroundImage: AssetImage(
+                            "assets/images/manal.jpg",
+                          ),
+                          radius: 42,
+                        ),
+                        title: Text(
+                          "Good Evening $username",
+                          style: theme.displayMedium,
+                        ),
+                        subtitle: Text(
+                          "One task at a time.One step closer.",
+                          style: theme.labelMedium,
+                        ),
+                        trailing: GestureDetector(
+                          onTap: () {},
+                          child: CircleAvatar(
+                            backgroundColor: Color(0XFF2A2A2A),
+                            child: SvgPicture.asset("assets/icons/sun.svg"),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ),
-              Text("Yuhuu ,Your work is ", style: theme.headlineLarge),
-              Row(
-                children: [
-                  Text("almost done!  ", style: theme.headlineLarge),
-                  SvgPicture.asset("assets/icons/wave.svg"),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                child: Text(
-                  "My Tasks",
-                  style: theme.headlineSmall?.copyWith(fontSize: 20),
+                    Text("Yuhuu ,Your work is ", style: theme.headlineLarge),
+                    Row(
+                      children: [
+                        Text("almost done!  ", style: theme.headlineLarge),
+                        SvgPicture.asset("assets/icons/wave.svg"),
+                      ],
+                    ),
+                  ],
                 ),
               ),
               Expanded(
+                flex: 3,
                 child: BlocBuilder<TaskController, TaskState>(
                   builder: (context, state) {
                     switch (state) {
@@ -82,6 +86,18 @@ class _HomePageState extends State<HomePage> {
                           child: CircularProgressIndicator(color: Colors.white),
                         );
                       case IsLoadedState():
+                        final highPriority = state.tasks
+                            .where((t) => t.isPriority)
+                            .toList();
+                        final normalTasks = state.tasks
+                            .where((t) => !t.isPriority)
+                            .toList();
+                        int allTasks = state.tasks.length;
+                        int finishedTasks = state.tasks
+                            .where((t) => t.isFinished)
+                            .toList()
+                            .length;
+                        double precentage = (finishedTasks / allTasks) * 100;
                         if (state.tasks.isEmpty) {
                           return Center(
                             child: Text(
@@ -90,58 +106,104 @@ class _HomePageState extends State<HomePage> {
                             ),
                           );
                         } else {
-                          return ListView.builder(
-                            itemCount: state.tasks.length,
-                            itemBuilder: (context, index) {
-                              return Card(
-                                margin: EdgeInsets.symmetric(vertical: 8),
-                                color: Color(0XFF2A2A2A),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadiusGeometry.circular(
-                                    20,
+                          return SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Card(
+                                  margin: EdgeInsets.symmetric(vertical: 8),
+                                  color: Color(0XFF2A2A2A),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadiusGeometry.circular(
+                                      20,
+                                    ),
+                                  ),
+                                  child: ListTile(
+                                    title: Text(
+                                      "Achieved Tasks",
+                                      style: theme.bodyMedium,
+                                    ),
+                                    subtitle: Text(
+                                      "$finishedTasks of $allTasks",
+                                      style: theme.labelMedium,
+                                    ),
+                                    trailing: CircularPercentIndicator(
+                                      radius: 27,
+                                      lineWidth: 5.0,
+                                      percent: precentage / 100,
+                                      center: Text(
+                                        "${precentage.floor()} %",
+                                        style: theme.bodyMedium,
+                                      ),
+                                      progressColor: Color(0XFF15B86C),
+                                      backgroundColor: Color(0XFF9E9E9E),
+                                    ),
                                   ),
                                 ),
-                                child: ListTile(
-                                  leading: Checkbox(
-                                    value: state.tasks[index].isFinished,
-                                    activeColor: Color(0XFF15B86C),
-                                    onChanged: (value) {
-                                      print("isFinished is: $value");
-                                      print("index $index");
-                                      context.read<TaskController>().add(
-                                        ToggleTask(
-                                          task: state.tasks[index].copyWith(
-                                            isFinished: value ?? false,
+                                Card(
+                                  margin: EdgeInsets.symmetric(vertical: 8),
+                                  color: Color(0XFF2A2A2A),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadiusGeometry.circular(
+                                      20,
+                                    ),
+                                  ),
+                                  child:Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(left: 16, top: 16, bottom: 8 ),
+                                          child: Text(
+                                            "High priority tasks",
+                                            style: theme.bodyMedium!.copyWith(
+                                              color: Color(0XFF15B86C),
+                                            ),
                                           ),
                                         ),
-                                      );
-                                    },
-                                  ),
-                                  title: Text(
-                                    state.tasks[index].taskName,
-                                    style: state.tasks[index].isFinished
-                                        ? theme.bodyMedium!.copyWith(
-                                            decoration:
-                                                TextDecoration.lineThrough,
-                                            decorationColor: Color(0XFFA0A0A0),
-                                            decorationThickness: 2,
-                                            color: Color(0XFFA0A0A0),
-                                          )
-                                        : theme.bodyMedium,
-                                  ),
-                                  subtitle: state.tasks[index].isFinished
-                                      ? null
-                                      : Text(
-                                          state.tasks[index].taskDescription,
-                                          style: theme.labelMedium,
+                                        ListView.builder(
+                                          shrinkWrap: true,
+                                          itemCount: highPriority.length,
+                                          itemBuilder: (context, index) {
+                                            return TaskCard(
+                                              task: highPriority[index],
+                                            );
+                                          },
                                         ),
-                                  trailing: Icon(
-                                    Icons.more_vert_rounded,
-                                    color: Color(0XFFC6C6C6),
+                                      ],
+                                    ),
                                   ),
+                                if (normalTasks.isNotEmpty)
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 16,
+                                    ),
+                                    child: Text(
+                                      "My Tasks",
+                                      style: theme.headlineSmall?.copyWith(
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  ),
+                                ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: normalTasks.length,
+                                  itemBuilder: (context, index) {
+                                    return Card(
+                                      margin: EdgeInsets.symmetric(vertical: 8),
+                                      color: Color(0XFF2A2A2A),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadiusGeometry.circular(20),
+                                      ),
+                                      child: TaskCard(
+                                        task: normalTasks[index],
+                                      ),
+                                    );
+                                  },
                                 ),
-                              );
-                            },
+                              ],
+                            ),
                           );
                         }
                       case ErrorState():

@@ -7,21 +7,27 @@ class LoadTasks extends TaskEvent {
   LoadTasks({required this.tasks});
 }
 
+class CalculateFinishedTasks extends TaskEvent {
+  int progress;
+  CalculateFinishedTasks({required this.progress});
+}
+
 class AddTask extends TaskEvent {
   TaskModel task;
-
   AddTask({required this.task});
 }
 
 class ToggleTask extends TaskEvent {
-    TaskModel task;
-
+  TaskModel task;
   ToggleTask({required this.task});
 }
 
 class EditTask extends TaskEvent {
   TaskModel task;
-  EditTask({
-    required this.task
-  });
+  EditTask({required this.task});
+}
+
+class DeleteTask extends TaskEvent {
+  TaskModel task;
+  DeleteTask({required this.task});
 }
