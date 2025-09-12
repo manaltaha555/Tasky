@@ -22,6 +22,7 @@ class _ToDoPageState extends State<ToDoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(title: Text("Completed Tasks"), centerTitle: true),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),

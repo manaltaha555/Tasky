@@ -22,6 +22,7 @@ class _CompletedPageState extends State<CompletedPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(title: Text("To Do Tasks"), centerTitle: true),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),

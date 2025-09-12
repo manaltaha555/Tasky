@@ -15,6 +15,7 @@ class ProfilePage extends StatelessWidget {
     final theme = Theme.of(context);
     bool isDark = box.get('isDark', defaultValue: false);
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text("My Profile"),
         leading: IconButton(
@@ -54,7 +55,9 @@ class ProfilePage extends StatelessWidget {
                               color: theme.cardColor,
                               shape: BoxShape.circle,
                               border: Border.all(
-                                color: !isDark? Color(0XFFD1DAD6) : Colors.transparent,
+                                color: !isDark
+                                    ? Color(0XFFD1DAD6)
+                                    : Colors.transparent,
                               ),
                             ),
                             child: IconButton(
