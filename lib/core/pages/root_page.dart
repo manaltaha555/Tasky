@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:todoapp/view/pages/completed_page.dart';
-import 'package:todoapp/view/pages/home_page.dart';
-import 'package:todoapp/view/pages/profile_page.dart';
-import 'package:todoapp/view/pages/to_do_page.dart';
+import 'package:todoapp/core/pages/completed_page.dart';
+import 'package:todoapp/core/pages/home_page.dart';
+import 'package:todoapp/core/pages/profile_page.dart';
+import 'package:todoapp/core/pages/to_do_page.dart';
 
 class RootPage extends StatefulWidget {
   const RootPage({super.key});
@@ -37,10 +37,10 @@ class _RootPageState extends State<RootPage> {
             currentIndex = value;
           });
         },
-        backgroundColor: Color(0XFF181818),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         currentIndex: currentIndex,
-        selectedItemColor: Color(0XFF15B86C),
-        unselectedItemColor: Color(0XFFC6C6C6),
+        selectedItemColor: Theme.of(context).primaryColor,
+        unselectedItemColor: Theme.of(context).indicatorColor,
         selectedLabelStyle: TextStyle(
           fontWeight: FontWeight.bold,
           fontFamily: "Poppins",
@@ -55,8 +55,8 @@ class _RootPageState extends State<RootPage> {
               "assets/icons/home.svg",
               colorFilter: ColorFilter.mode(
                 currentIndex == 0
-                    ? const Color(0XFF15B86C)
-                    : const Color(0XFFC6C6C6),
+                    ? Theme.of(context).primaryColor
+                    : Theme.of(context).indicatorColor,
                 BlendMode.srcIn,
               ),
             ),
@@ -67,8 +67,8 @@ class _RootPageState extends State<RootPage> {
               "assets/icons/toDo.svg",
               colorFilter: ColorFilter.mode(
                 currentIndex == 1
-                    ? const Color(0XFF15B86C)
-                    : const Color(0XFFC6C6C6),
+                    ? Theme.of(context).primaryColor
+                    : Theme.of(context).indicatorColor,
                 BlendMode.srcIn,
               ),
             ),
@@ -79,8 +79,8 @@ class _RootPageState extends State<RootPage> {
               "assets/icons/completed.svg",
               colorFilter: ColorFilter.mode(
                 currentIndex == 2
-                    ? const Color(0XFF15B86C)
-                    : const Color(0XFFC6C6C6),
+                    ? Theme.of(context).primaryColor
+                    : Theme.of(context).indicatorColor,
                 BlendMode.srcIn,
               ),
             ),
@@ -91,8 +91,8 @@ class _RootPageState extends State<RootPage> {
               "assets/icons/profile.svg",
               colorFilter: ColorFilter.mode(
                 currentIndex == 3
-                    ? const Color(0XFF15B86C)
-                    : const Color(0XFFC6C6C6),
+                    ? Theme.of(context).primaryColor
+                    : Theme.of(context).indicatorColor,
                 BlendMode.srcIn,
               ),
             ),

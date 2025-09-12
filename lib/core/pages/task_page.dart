@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:todoapp/bloc/task_controller.dart';
 import 'package:todoapp/bloc/task_event.dart';
 import 'package:todoapp/models/task_model.dart';
-import 'package:todoapp/view/components/custom_text_form_field.dart';
+import 'package:todoapp/core/components/custom_text_form_field.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TaskPage extends StatefulWidget {
@@ -25,14 +25,15 @@ class _TaskPageState extends State<TaskPage> {
     super.initState();
 
     if (widget.task != null) {
-      taskName.text = widget.task!.taskName;
-      taskDescription.text = widget.task!.taskDescription;
+      taskName.text = widget.task!.taskName!;
+      taskDescription.text = widget.task!.taskDescription!;
       isActive = widget.task!.isPriority;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(title: Text("New Task")),
@@ -80,7 +81,7 @@ class _TaskPageState extends State<TaskPage> {
                         children: [
                           Text(
                             "High Priority",
-                            style: Theme.of(context).textTheme.bodyMedium,
+                            style: theme.textTheme.bodyMedium,
                           ),
                           Switch(
                             value: isActive,
@@ -129,11 +130,12 @@ class _TaskPageState extends State<TaskPage> {
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+                    children: [ 
+                      if(widget.task == null)
                       Icon(Icons.add),
                       Text(
-                        " Add Task",
-                        style: Theme.of(context).textTheme.displayMedium,
+                        widget.task != null? "Edit task" : " Add Task",
+                        style: theme.textTheme.displayMedium!.copyWith(color: Colors.white),
                       ),
                     ],
                   ),

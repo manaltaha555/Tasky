@@ -1,71 +1,32 @@
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:todoapp/models/task_model.dart';
 
-class AppDatabase {
-  static final AppDatabase _instance = AppDatabase._internal();
-
-  AppDatabase._internal();
-
-  factory AppDatabase() => _instance;
-
-  Database? _database;
-  String dbPathName = "todo.db";
-  String tableName = "todo";
-
-  Future<Database> get db async {
-    if (_database != null) {
-      print("db opened");
-      return _database!;
-    } else {
-      _database = await openDb();
-      return _database!;
+class TaskHiveService {
+  
+static Future<Box<TaskModel>> openTaskBox() async {
+    if (!Hive.isBoxOpen('tasksBox')) {
+      return await Hive.openBox<TaskModel>("tasksBox");
     }
-  }
-
-  Future<Database> openDb() async {
-    var dbPath = await getDatabasesPath();
-    String path = join(dbPath, dbPathName);
-
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: (Database db, int version) async {
-        await db.execute('''
-            CREATE TABLE $tableName( 
-            id INTEGER PRIMARY KEY AUTOINCREMENT, 
-            taskName TEXT NOT NULL,
-            taskDescription TEXT NOT NULL,
-            isFinished INTEGER NOT NULL,
-            isPriority INTEGER NOT NULL
-            );
-''');
-      },
-    );
+    return Hive.box<TaskModel>("tasksBox");
   }
 
   Future<List<TaskModel>> getTodos() async {
-    final Database database = await db;
-    final rows = await database.query(tableName);
-    return rows.map((e) => TaskModel.fromJson(e)).toList();
-  }
-  
-  Future<int> insertTodo(TaskModel task) async {
-    final Database database = await db;
-    return await database.insert(
-      tableName,
-      task.toJson(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    final box = await  openTaskBox();
+    return box.values.toList();
   }
 
-  Future<int> updateTodp(TaskModel task) async {
-    final Database database = await db;
-    return await database.update(
-      tableName,
-      task.toJson(),
-      where: "id = ?",
-      whereArgs: [task.id],
-    );
+  Future<int> insertTodo(TaskModel task) async {
+    final box = await  openTaskBox();
+    return await box.add(task); 
+  }
+
+  Future<void> updateTodo(int key, TaskModel task) async {
+    final box = await  openTaskBox();
+    await box.put(key, task);
+  }
+
+  Future<void> deleteTodo(int key) async {
+    final box = await  openTaskBox();
+    await box.delete(key);
   }
 }

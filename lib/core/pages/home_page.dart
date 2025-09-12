@@ -5,9 +5,11 @@ import 'package:todoapp/bloc/task_controller.dart';
 import 'package:todoapp/bloc/task_event.dart';
 import 'package:todoapp/bloc/task_state.dart';
 import 'package:todoapp/services/preferneces.dart';
-import 'package:todoapp/view/components/task_card.dart';
-import 'package:todoapp/view/pages/task_page.dart';
+import 'package:todoapp/core/components/task_card.dart';
+import 'package:todoapp/core/pages/task_page.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -18,6 +20,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final String? username = Preferneces().getString("userName") ?? "username";
+  var box = Hive.box('settings');
 
   @override
   void initState() {
@@ -27,7 +30,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context).textTheme;
+    final theme = Theme.of(context);
+    bool isDark = box.get('isDark', defaultValue: false);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -51,25 +55,40 @@ class _HomePageState extends State<HomePage> {
                         ),
                         title: Text(
                           "Good Evening $username",
-                          style: theme.displayMedium,
+                          style: theme.textTheme.displayMedium,
                         ),
                         subtitle: Text(
                           "One task at a time.One step closer.",
-                          style: theme.labelMedium,
+                          style: theme.textTheme.labelMedium,
                         ),
                         trailing: GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            // box.put('isDark',!isDark);
+                            // setState(() {
+                            // });
+                          },
                           child: CircleAvatar(
-                            backgroundColor: Color(0XFF2A2A2A),
-                            child: SvgPicture.asset("assets/icons/sun.svg"),
+                            backgroundColor: theme.cardColor,
+                            child: SvgPicture.asset(
+                              isDark
+                                  ? "assets/icons/sun.svg"
+                                  : "assets/icons/theme.svg",
+                              color: theme.iconTheme.color,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                    Text("Yuhuu ,Your work is ", style: theme.headlineLarge),
+                    Text(
+                      "Yuhuu ,Your work is ",
+                      style: theme.textTheme.headlineLarge,
+                    ),
                     Row(
                       children: [
-                        Text("almost done!  ", style: theme.headlineLarge),
+                        Text(
+                          "almost done!  ",
+                          style: theme.textTheme.headlineLarge,
+                        ),
                         SvgPicture.asset("assets/icons/wave.svg"),
                       ],
                     ),
@@ -83,7 +102,9 @@ class _HomePageState extends State<HomePage> {
                     switch (state) {
                       case IsLoadingState():
                         return Center(
-                          child: CircularProgressIndicator(color: Colors.white),
+                          child: CircularProgressIndicator(
+                            color: theme.indicatorColor,
+                          ),
                         );
                       case IsLoadedState():
                         final highPriority = state.tasks
@@ -102,7 +123,7 @@ class _HomePageState extends State<HomePage> {
                           return Center(
                             child: Text(
                               "No Tasks Yet, Try Adding One!",
-                              style: theme.bodyMedium,
+                              style: theme.textTheme.bodyMedium,
                             ),
                           );
                         } else {
@@ -110,22 +131,16 @@ class _HomePageState extends State<HomePage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                if(highPriority.isNotEmpty)
                                 Card(
-                                  margin: EdgeInsets.symmetric(vertical: 8),
-                                  color: Color(0XFF2A2A2A),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadiusGeometry.circular(
-                                      20,
-                                    ),
-                                  ),
                                   child: ListTile(
                                     title: Text(
                                       "Achieved Tasks",
-                                      style: theme.bodyMedium,
+                                      style: theme.textTheme.bodyMedium,
                                     ),
                                     subtitle: Text(
                                       "$finishedTasks of $allTasks",
-                                      style: theme.labelMedium,
+                                      style: theme.textTheme.labelMedium,
                                     ),
                                     trailing: CircularPercentIndicator(
                                       radius: 27,
@@ -133,7 +148,7 @@ class _HomePageState extends State<HomePage> {
                                       percent: precentage / 100,
                                       center: Text(
                                         "${precentage.floor()} %",
-                                        style: theme.bodyMedium,
+                                        style: theme.textTheme.bodyMedium,
                                       ),
                                       progressColor: Color(0XFF15B86C),
                                       backgroundColor: Color(0XFF9E9E9E),
@@ -141,38 +156,36 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                                 Card(
-                                  margin: EdgeInsets.symmetric(vertical: 8),
-                                  color: Color(0XFF2A2A2A),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadiusGeometry.circular(
-                                      20,
-                                    ),
-                                  ),
-                                  child:Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(left: 16, top: 16, bottom: 8 ),
-                                          child: Text(
-                                            "High priority tasks",
-                                            style: theme.bodyMedium!.copyWith(
-                                              color: Color(0XFF15B86C),
-                                            ),
-                                          ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          left: 16,
+                                          top: 16,
+                                          bottom: 8,
                                         ),
-                                        ListView.builder(
-                                          shrinkWrap: true,
-                                          itemCount: highPriority.length,
-                                          itemBuilder: (context, index) {
-                                            return TaskCard(
-                                              task: highPriority[index],
-                                            );
-                                          },
+                                        child: Text(
+                                          "High priority tasks",
+                                          style: theme.textTheme.bodyMedium!
+                                              .copyWith(
+                                                color: Color(0XFF15B86C),
+                                              ),
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                      ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount: highPriority.length,
+                                        itemBuilder: (context, index) {
+                                          return TaskCard(
+                                            task: highPriority[index],
+                                          );
+                                        },
+                                      ),
+                                    ],
                                   ),
+                                ),
                                 if (normalTasks.isNotEmpty)
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
@@ -180,9 +193,8 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                     child: Text(
                                       "My Tasks",
-                                      style: theme.headlineSmall?.copyWith(
-                                        fontSize: 20,
-                                      ),
+                                      style: theme.textTheme.headlineSmall
+                                          ?.copyWith(fontSize: 20),
                                     ),
                                   ),
                                 ListView.builder(
@@ -190,15 +202,7 @@ class _HomePageState extends State<HomePage> {
                                   itemCount: normalTasks.length,
                                   itemBuilder: (context, index) {
                                     return Card(
-                                      margin: EdgeInsets.symmetric(vertical: 8),
-                                      color: Color(0XFF2A2A2A),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadiusGeometry.circular(20),
-                                      ),
-                                      child: TaskCard(
-                                        task: normalTasks[index],
-                                      ),
+                                      child: TaskCard(task: normalTasks[index]),
                                     );
                                   },
                                 ),
@@ -227,7 +231,12 @@ class _HomePageState extends State<HomePage> {
                           padding: const EdgeInsets.only(right: 8),
                           child: Icon(Icons.add),
                         ),
-                        Text("Add new task", style: theme.displayMedium),
+                        Text(
+                          "Add new task",
+                          style: theme.textTheme.displayMedium!.copyWith(
+                            color: Colors.white,
+                          ),
+                        ),
                       ],
                     ),
                   ),

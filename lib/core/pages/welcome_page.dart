@@ -4,8 +4,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:todoapp/bloc/task_controller.dart';
 import 'package:todoapp/bloc/task_event.dart';
 import 'package:todoapp/services/preferneces.dart';
-import 'package:todoapp/view/components/custom_text_form_field.dart';
-import 'package:todoapp/view/pages/root_page.dart';
+import 'package:todoapp/core/components/custom_text_form_field.dart';
+import 'package:todoapp/core/pages/root_page.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -103,7 +103,7 @@ class _WelcomePageState extends State<WelcomePage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Let's Get Started", style: theme.displayMedium),
+                        Text("Let's Get Started", style: theme.displayMedium!.copyWith(color: Colors.white)),
                       ],
                     ),
                   ),

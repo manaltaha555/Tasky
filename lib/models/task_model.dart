@@ -1,14 +1,27 @@
-class TaskModel {
-  final int? id;
-  final String taskName;
-  final String taskDescription;
-  final bool isFinished;
-  final bool isPriority;
+import 'package:hive_ce_flutter/hive_flutter.dart';
+part 'task_model.g.dart'; 
+
+@HiveType(typeId: 0) // لازم كل model ليه typeId مختلف
+class TaskModel extends HiveObject {
+  @HiveField(0)
+  int? id;
+
+  @HiveField(1)
+  String? taskName;
+
+  @HiveField(2)
+  String? taskDescription;
+
+  @HiveField(3)
+  bool isFinished;
+
+  @HiveField(4)
+  bool isPriority;
 
   TaskModel({
     this.id,
-    required this.taskName,
-    required this.taskDescription,
+    this.taskName,
+    this.taskDescription,
     this.isFinished = false,
     this.isPriority = false,
   });
@@ -26,26 +39,6 @@ class TaskModel {
       taskDescription: taskDescription ?? this.taskDescription,
       isFinished: isFinished ?? this.isFinished,
       isPriority: isPriority ?? this.isPriority,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      "id": id,
-      "taskName": taskName,
-      "isFinished": isFinished ? 1 : 0,
-      "isPriority": isPriority ? 1 : 0,
-      "taskDescription": taskDescription,
-    };
-  }
-
-  factory TaskModel.fromJson(Map<String, dynamic> json) {
-    return TaskModel(
-      id: json["id"],
-      taskName: json["taskName"],
-      taskDescription: json["taskDescription"],
-      isFinished: json["isFinished"] == 1,
-      isPriority: json["isPriority"] == 1,
     );
   }
 }
